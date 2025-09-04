@@ -1,3 +1,19 @@
+/* Custom scrollbar for Features auto-scroll */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 6px;
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #e0e0e0;
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #bdbdbd;
+}
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #e0e0e0 transparent;
+}
 @import "tailwindcss";
 
 :root {
