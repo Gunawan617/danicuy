@@ -45,33 +45,32 @@ export default function CTA() {
               With Animas
             </button>
             <h3 className="text-lg font-bold mb-4">
-              Bertemu professional<br />dan pelajari
+              Tim Klinik Ukom<br />
             </h3>
 
             {/* Auto-scroll row */}
-          <motion.div
-  className="flex gap-4"
-  animate={{ x: ["0%", "-50%"] }}
-  transition={{
-    repeat: Infinity,
-    duration: 12,
-    ease: "linear",
-  }}
->
-  {loopedTeam.map((member, i) => (
-    <div
-      key={i}
-      className="w-24 h-24 md:w-28 md:h-28 rounded-xl overflow-hidden shadow-lg border border-white/10 flex-shrink-0"
-    >
-      <img
-        src={member.photo}
-        alt={member.name}
-        className="w-full h-full object-cover"
-      />
-    </div>
-  ))}
-</motion.div>
-
+            <motion.div
+              className="flex gap-4"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{
+                repeat: Infinity,
+                duration: 12,
+                ease: "linear",
+              }}
+            >
+              {loopedTeam.map((member, i) => (
+                <div
+                  key={i}
+                  className="w-16 h-66 md:w-20 md:h-20 rounded-lg overflow-hidden shadow-md border border-white/10 flex-shrink-0"
+                >
+                  <img
+                    src={member.photo}
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </motion.div>
 
             <p className="text-gray-200 text-xs md:text-sm mt-4">
               Bergabunglah dengan komunitas profesional dan tingkatkan skill Anda
