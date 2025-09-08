@@ -1,4 +1,13 @@
-const testimonials = [
+import { useState, useEffect } from 'react'
+
+interface Testimonial {
+  name: string
+  role: string
+  testimonial: string
+  date: string
+}
+
+const defaultTestimonials: Testimonial[] = [
   {
     name: "Meghan Roberto",
     role: "Perawat",
@@ -50,31 +59,40 @@ const testimonials = [
 ];
 
 export default function Testimonials() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(defaultTestimonials)
+  const [loading, setLoading] = useState(false)
   return (
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-6">
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-12 text-gray-800">
           Cerita Sukses Alumni UKOM CBT
         </h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-          {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
-              <div className="flex items-center mb-4">
-                <div className="w-10 h-10 bg-gray-300 rounded-full mr-3 flex items-center justify-center">
-                  <span className="text-gray-600 text-sm font-medium">
-                    {testimonial.name.charAt(0)}
-                  </span>
+        {loading ? (
+          <div className="text-center py-8">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <p className="mt-2 text-gray-600">Memuat testimonials...</p>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
+                <div className="flex items-center mb-4">
+                  <div className="w-10 h-10 bg-gray-300 rounded-full mr-3 flex items-center justify-center">
+                    <span className="text-gray-600 text-sm font-medium">
+                      {testimonial.name.charAt(0)}
+                    </span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800 text-sm">{testimonial.name}</h4>
+                    <p className="text-xs text-gray-500">{testimonial.role}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-gray-800 text-sm">{testimonial.name}</h4>
-                  <p className="text-xs text-gray-500">{testimonial.role}</p>
-                </div>
+                <p className="text-gray-700 text-sm mb-3 leading-relaxed">{testimonial.testimonial}</p>
+                <p className="text-xs text-gray-400">{testimonial.date}</p>
               </div>
-              <p className="text-gray-700 text-sm mb-3 leading-relaxed">{testimonial.testimonial}</p>
-              <p className="text-xs text-gray-400">{testimonial.date}</p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

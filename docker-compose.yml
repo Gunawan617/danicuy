@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: cbt_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: cbt_ukom
+      MYSQL_USER: cbt_user
+      MYSQL_PASSWORD: cbt_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/migrations:/docker-entrypoint-initdb.d
+      - ./database/seeds:/docker-entrypoint-initdb.d/seeds
+    networks:
+      - cbt_network
+
+  backend:
+    build: ./backend
+    container_name: cbt_backend
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=cbt_ukom
+      - DB_USER=cbt_user
+      - DB_PASSWORD=cbt_password
+      - JWT_SECRET=your_jwt_secret_here
+    ports:
+      - "3001:3000"
+    depends_on:
+      - db
+    networks:
+      - cbt_network
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  frontend:
+    build: .
+    container_name: cbt_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - cbt_network
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  mysql_data:
+
+networks:
+  cbt_network:
+    driver: bridge
