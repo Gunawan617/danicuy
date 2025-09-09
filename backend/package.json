@@ -9,14 +9,24 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "start": "nuxt start"
+    "start": "nuxt start",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:api": "vitest run tests/integration/api.test.js",
+    "test:auth": "vitest run tests/unit/auth.test.js",
+    "test:orders": "vitest run tests/unit/orders.test.js",
+    "test:questions": "vitest run tests/unit/questions.test.js"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/node": "^20.5.1",
-    "nuxt": "^3.7.4"
+    "@vitest/coverage-v8": "^1.0.4",
+    "nuxt": "^3.7.4",
+    "supertest": "^6.3.3",
+    "vitest": "^1.0.4"
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.8.0",

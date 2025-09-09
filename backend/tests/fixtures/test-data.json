@@ -1,0 +1,60 @@
+{
+  "users": {
+    "validUser": {
+      "nama": "Test User",
+      "email": "test@example.com",
+      "password": "password123",
+      "profesi": "bidan",
+      "jenjang": "D3"
+    },
+    "adminUser": {
+      "nama": "Admin User",
+      "email": "admin@example.com",
+      "password": "admin123",
+      "profesi": "bidan",
+      "jenjang": "D3"
+    }
+  },
+  "paket": {
+    "bidanD3": {
+      "nama": "Paket CBT Bidan D3 3 Bulan",
+      "profesi": "bidan",
+      "jenjang": "D3",
+      "durasi_bulan": 3,
+      "harga": 150000.00,
+      "fitur": "Review pembahasan, Timer CBT, Autosave",
+      "jumlah_soal": 100
+    },
+    "perawatD4": {
+      "nama": "Paket CBT Perawat D4-S1 6 Bulan",
+      "profesi": "perawat",
+      "jenjang": "D4-S1",
+      "durasi_bulan": 6,
+      "harga": 320000.00,
+      "fitur": "Review pembahasan, Timer CBT, Autosave, Laporan progress",
+      "jumlah_soal": 240
+    }
+  },
+  "questions": {
+    "bidanQuestion": {
+      "kategori_id": 1,
+      "profesi": "bidan",
+      "jenjang": "D3",
+      "soal": "Apa yang dimaksud dengan kebidanan komprehensif?",
+      "pilihan_a": "Pelayanan kebidanan yang hanya fokus pada persalinan",
+      "pilihan_b": "Pelayanan kebidanan yang mencakup seluruh siklus kesehatan reproduksi wanita",
+      "pilihan_c": "Pelayanan kebidanan yang hanya untuk ibu hamil",
+      "pilihan_d": "Pelayanan kebidanan yang hanya untuk bayi baru lahir",
+      "jawaban_benar": "b",
+      "pembahasan": "Kebidanan komprehensif mencakup pelayanan dari remaja, kehamilan, persalinan, nifas, dan kesehatan reproduksi secara keseluruhan."
+    }
+  },
+  "orders": {
+    "pendingOrder": {
+      "user_id": 1,
+      "paket_id": 1,
+      "bukti_transfer": "base64_encoded_image_data"
+    }
+  }
+}
+
