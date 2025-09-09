@@ -102,3 +102,4 @@ export default function PurchaseCard({ paket, onPurchaseClick, isLoggedIn }: Pur
   );
 }
 
+

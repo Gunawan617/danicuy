@@ -1,21 +1,16 @@
 "use client"
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-interface User {
-  id: number;
-  nama: string;
-  email: string;
-  profesi: string;
-  jenjang: string;
-}
+import { apiService, type User } from '../lib/api';
 
 interface AuthContextType {
   isLoggedIn: boolean;
   user: User | null;
   token: string | null;
-  login: (token: string, userData: User) => void;
+  login: (email: string, password: string) => Promise<{ success: boolean; message?: string }>;
+  register: (userData: { nama: string; email: string; password: string; profesi: string; jenjang: string }) => Promise<{ success: boolean; message: string }>;
   logout: () => void;
   checkAuth: () => boolean;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,6 +19,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Check for existing auth data on mount
@@ -40,22 +36,53 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setToken(storedToken);
         setUser(userData);
         setIsLoggedIn(true);
+        setLoading(false);
         return true;
       } catch (error) {
         console.error('Error parsing stored user data:', error);
         logout();
+        setLoading(false);
         return false;
       }
     }
+    setLoading(false);
     return false;
   };
 
-  const login = (authToken: string, userData: User) => {
-    localStorage.setItem('auth_token', authToken);
-    localStorage.setItem('user_data', JSON.stringify(userData));
-    setToken(authToken);
-    setUser(userData);
-    setIsLoggedIn(true);
+  const login = async (email: string, password: string) => {
+    try {
+      setLoading(true);
+      const response = await apiService.login({ email, password });
+
+      if (response.success) {
+        localStorage.setItem('auth_token', response.token);
+        localStorage.setItem('user_data', JSON.stringify(response.user));
+        setToken(response.token);
+        setUser(response.user);
+        setIsLoggedIn(true);
+        return { success: true };
+      } else {
+        return { success: false, message: response.message || 'Login gagal' };
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      return { success: false, message: 'Terjadi kesalahan saat login' };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const register = async (userData: { nama: string; email: string; password: string; profesi: string; jenjang: string }) => {
+    try {
+      setLoading(true);
+      const response = await apiService.register(userData);
+      return response;
+    } catch (error) {
+      console.error('Register error:', error);
+      return { success: false, message: 'Terjadi kesalahan saat registrasi' };
+    } finally {
+      setLoading(false);
+    }
   };
 
   const logout = () => {
@@ -71,8 +98,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user,
     token,
     login,
+    register,
     logout,
-    checkAuth
+    checkAuth,
+    loading
   };
 
   return (
@@ -120,4 +149,5 @@ export function AuthGuard({
 
   return <>{children}</>;
 }
+
 

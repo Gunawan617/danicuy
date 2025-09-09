@@ -60,7 +60,7 @@ export default function AdminPanel() {
   const fetchStats = async () => {
     try {
       setLoading(true)
-      const response = await fetch('http://localhost:3000/api/admin/stats')
+      const response = await fetch('http://localhost:3002/api/admin/stats')
       const data = await response.json()
       if (data.success) {
         setStats(data.stats)
@@ -75,7 +75,7 @@ export default function AdminPanel() {
   const fetchUsers = async () => {
     try {
       setLoading(true)
-      const response = await fetch('http://localhost:3000/api/admin/users')
+      const response = await fetch('http://localhost:3002/api/admin/users')
       const data = await response.json()
       if (data.success) {
         setUsers(data.data)
@@ -90,7 +90,7 @@ export default function AdminPanel() {
   const fetchPackages = async () => {
     try {
       setLoading(true)
-      const response = await fetch('http://localhost:3000/api/paket')
+      const response = await fetch('http://localhost:3002/api/paket')
       const data = await response.json()
       if (data.success) {
         setPackages(data.data)

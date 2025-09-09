@@ -4,132 +4,7 @@ import { usePathname } from "next/navigation";
 import PurchaseCard from "./PurchaseCard";
 import PurchaseModal from "./PurchaseModal";
 import { useAuth } from "./AuthGuard";
-
-interface Paket {
-  id: number;
-  nama: string;
-  profesi: string;
-  jenjang: string;
-  durasi_bulan: number;
-  harga: number;
-  fitur: string;
-  jumlah_soal: number;
-  tipe: 'tryout' | 'bimbel';
-  deskripsi: string;
-  target_audience: string;
-}
-
-// Data Paket Tryout
-const paketTryout: Paket[] = [
-  {
-    id: 101,
-    nama: "Tryout UKOM Bidan D3",
-    profesi: "bidan",
-    jenjang: "D3",
-    durasi_bulan: 1,
-    harga: 25000,
-    fitur: "50 soal simulasi, Timer CBT, Review pembahasan, Analisis performa",
-    jumlah_soal: 50,
-    tipe: "tryout",
-    deskripsi: "Simulasi ujian UKOM Bidan D3 dengan soal terbaru dan analisis mendalam",
-    target_audience: "Mahasiswa Bidan D3 yang akan menghadapi ujian kompetensi"
-  },
-  {
-    id: 102,
-    nama: "Tryout UKOM Bidan D4-S1",
-    profesi: "bidan",
-    jenjang: "D4-S1",
-    durasi_bulan: 1,
-    harga: 35000,
-    fitur: "75 soal simulasi, Timer CBT, Review pembahasan, Laporan progress",
-    jumlah_soal: 75,
-    tipe: "tryout",
-    deskripsi: "Paket tryout lengkap untuk persiapan ujian UKOM Bidan D4-S1",
-    target_audience: "Mahasiswa Bidan D4-S1 yang ingin mengukur kemampuan sebelum ujian"
-  },
-  {
-    id: 103,
-    nama: "Tryout UKOM Perawat D3",
-    profesi: "perawat",
-    jenjang: "D3",
-    durasi_bulan: 1,
-    harga: 25000,
-    fitur: "50 soal simulasi, Timer CBT, Review pembahasan, Prediksi skor",
-    jumlah_soal: 50,
-    tipe: "tryout",
-    deskripsi: "Simulasi ujian UKOM Perawat D3 dengan pembahasan detail",
-    target_audience: "Mahasiswa Perawat D3 yang mempersiapkan ujian kompetensi"
-  },
-  {
-    id: 104,
-    nama: "Tryout UKOM Perawat D4-S1",
-    profesi: "perawat",
-    jenjang: "D4-S1",
-    durasi_bulan: 1,
-    harga: 35000,
-    fitur: "75 soal simulasi, Timer CBT, Review pembahasan, Target skor",
-    jumlah_soal: 75,
-    tipe: "tryout",
-    deskripsi: "Paket tryout premium untuk persiapan ujian UKOM Perawat D4-S1",
-    target_audience: "Mahasiswa Perawat D4-S1 yang ingin mencapai skor maksimal"
-  }
-]
-
-// Data Paket Bimbel
-const paketBimbel: Paket[] = [
-  {
-    id: 201,
-    nama: "Bimbel UKOM Bidan D3 - 3 Bulan",
-    profesi: "bidan",
-    jenjang: "D3",
-    durasi_bulan: 3,
-    harga: 750000,
-    fitur: "Akses materi 3 bulan, 300+ soal latihan, Webinar mingguan, Konsultasi online, Target skor",
-    jumlah_soal: 300,
-    tipe: "bimbel",
-    deskripsi: "Program bimbingan intensif 3 bulan untuk persiapan ujian UKOM Bidan D3",
-    target_audience: "Mahasiswa Bidan D3 yang ingin bimbingan komprehensif"
-  },
-  {
-    id: 202,
-    nama: "Bimbel UKOM Bidan D4-S1 - 6 Bulan",
-    profesi: "bidan",
-    jenjang: "D4-S1",
-    durasi_bulan: 6,
-    harga: 1200000,
-    fitur: "Akses materi 6 bulan, 500+ soal latihan, Webinar 2x/minggu, Konsultasi online, Simulasi ujian, Target skor",
-    jumlah_soal: 500,
-    tipe: "bimbel",
-    deskripsi: "Program bimbingan premium 6 bulan untuk persiapan ujian UKOM Bidan D4-S1",
-    target_audience: "Mahasiswa Bidan D4-S1 yang ingin persiapan maksimal"
-  },
-  {
-    id: 203,
-    nama: "Bimbel UKOM Perawat D3 - 3 Bulan",
-    profesi: "perawat",
-    jenjang: "D3",
-    durasi_bulan: 3,
-    harga: 750000,
-    fitur: "Akses materi 3 bulan, 300+ soal latihan, Webinar mingguan, Konsultasi online, Target skor",
-    jumlah_soal: 300,
-    tipe: "bimbel",
-    deskripsi: "Program bimbingan intensif 3 bulan untuk persiapan ujian UKOM Perawat D3",
-    target_audience: "Mahasiswa Perawat D3 yang ingin bimbingan komprehensif"
-  },
-  {
-    id: 204,
-    nama: "Bimbel UKOM Perawat D4-S1 - 6 Bulan",
-    profesi: "perawat",
-    jenjang: "D4-S1",
-    durasi_bulan: 6,
-    harga: 1200000,
-    fitur: "Akses materi 6 bulan, 500+ soal latihan, Webinar 2x/minggu, Konsultasi online, Simulasi ujian, Target skor",
-    jumlah_soal: 500,
-    tipe: "bimbel",
-    deskripsi: "Program bimbingan premium 6 bulan untuk persiapan ujian UKOM Perawat D4-S1",
-    target_audience: "Mahasiswa Perawat D4-S1 yang ingin persiapan maksimal"
-  }
-]
+import { apiService, type Paket } from "../lib/api";
 
 const filters = ["Semua Paket", "Bidan D3", "Bidan D4-S1", "Perawat D3", "Perawat D4-S1"];
 
@@ -140,6 +15,28 @@ export default function Programs() {
   const [activeTab, setActiveTab] = useState<'tryout' | 'bimbel'>('tryout');
   const [selectedPaket, setSelectedPaket] = useState<Paket | null>(null);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [paketList, setPaketList] = useState<Paket[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch packages from API
+  useEffect(() => {
+    const fetchPaket = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await apiService.getPaket();
+        setPaketList(data);
+      } catch (err) {
+        console.error('Failed to fetch packages:', err);
+        setError('Gagal memuat data paket. Silakan coba lagi.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPaket();
+  }, []);
 
   // Auto-detect active tab based on pathname
   useEffect(() => {
@@ -168,7 +65,7 @@ export default function Programs() {
     }
   };
 
-  const currentPaketList = activeTab === 'tryout' ? paketTryout : paketBimbel;
+  const currentPaketList = paketList.filter(paket => paket.tipe === activeTab);
 
   const filteredPaket = currentPaketList.filter((paket) => {
     if (activeFilter === "Semua Paket") return true;
@@ -281,9 +178,35 @@ export default function Programs() {
           ))}
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-12">
+            <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600">Memuat paket...</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="text-center py-12">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl text-red-600">⚠️</span>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Terjadi Kesalahan</h3>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+              Coba Lagi
+            </button>
+          </div>
+        )}
+
         {/* Paket Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          {filteredPaket.map((paket) => (
+        {!loading && !error && (
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {filteredPaket.map((paket) => (
             <div
               key={paket.id}
               className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 group"
@@ -395,9 +318,11 @@ export default function Programs() {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
 
-        {filteredPaket.length === 0 && (
+        {/* No packages found */}
+        {!loading && !error && filteredPaket.length === 0 && (
           <div className="text-center py-12">
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-4xl">📦</span>

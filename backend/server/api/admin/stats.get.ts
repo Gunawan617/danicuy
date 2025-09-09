@@ -1,6 +1,8 @@
 import mysql from 'mysql2/promise'
 
 export default defineEventHandler(async (event) => {
+  // TODO: Add admin authentication middleware
+  // await useAdminAuth(event)
   const config = useRuntimeConfig()
 
   const connection = await mysql.createConnection({

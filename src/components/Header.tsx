@@ -2,82 +2,22 @@
 "use client";
 import { useState } from "react";
 import { useAuth } from "./AuthGuard";
+import AuthModal from "./AuthModal";
 
 export default function Header() {
-  const { isLoggedIn, user, login, logout } = useAuth();
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const { isLoggedIn, user, logout } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [loginData, setLoginData] = useState({ email: '', password: '' });
-  const [registerData, setRegisterData] = useState({
-    nama: '',
-    email: '',
-    password: '',
-    profesi: 'bidan' as 'bidan' | 'perawat',
-    jenjang: 'D3' as 'D3' | 'D4-S1'
-  });
-  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      const response = await fetch('http://localhost:3000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(loginData)
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        login(data.token, data.user);
-        setShowLoginModal(false);
-        setLoginData({ email: '', password: '' });
-      } else {
-        alert('Login gagal: ' + (data.message || 'Email atau password salah'));
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      alert('Terjadi kesalahan saat login');
-    } finally {
-      setLoading(false);
-    }
+  const handleShowLogin = () => {
+    setAuthMode('login');
+    setShowAuthModal(true);
   };
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      const response = await fetch('http://localhost:3000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(registerData)
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        alert('Registrasi berhasil! Silakan login.');
-        setShowRegisterModal(false);
-        setRegisterData({
-          nama: '',
-          email: '',
-          password: '',
-          profesi: 'bidan',
-          jenjang: 'D3'
-        });
-      } else {
-        alert('Registrasi gagal: ' + (data.message || 'Terjadi kesalahan'));
-      }
-    } catch (error) {
-      console.error('Register error:', error);
-      alert('Terjadi kesalahan saat registrasi');
-    } finally {
-      setLoading(false);
-    }
+  const handleShowRegister = () => {
+    setAuthMode('register');
+    setShowAuthModal(true);
   };
 
   const handleLogout = () => {
@@ -121,6 +61,24 @@ export default function Header() {
             >
               Buku
             </a>
+            {isLoggedIn && (
+              <>
+                <a
+                  href="/dashboard"
+                  className="text-slate-700 text-sm hover:text-slate-900 font-medium transition-colors duration-300"
+                >
+                  Dashboard
+                </a>
+                {/* Link Admin - sementara tampilkan untuk semua user yang login */}
+                {/* Dalam production, periksa role admin dari database */}
+                <a
+                  href="/admin"
+                  className="text-slate-700 text-sm hover:text-slate-900 font-medium transition-colors duration-300"
+                >
+                  Admin Panel
+                </a>
+              </>
+            )}
           {/* <a
             href="/tryout"
             className="text-slate-700 text-sm hover:text-slate-900 font-medium transition-colors duration-300"
@@ -162,13 +120,13 @@ export default function Header() {
             ) : (
               <>
                 <button
-                  onClick={() => setShowLoginModal(true)}
+                  onClick={handleShowLogin}
                   className="text-slate-700 text-sm hover:text-slate-900 font-medium transition-colors duration-300"
                 >
                   Masuk
                 </button>
                 <button
-                  onClick={() => setShowRegisterModal(true)}
+                  onClick={handleShowRegister}
                   className="bg-slate-900 text-white px-4 lg:px-5 py-2 rounded-lg text-sm hover:bg-slate-800 transition-all duration-300 shadow-sm hover:shadow-md font-medium"
                 >
                   Registrasi
@@ -290,6 +248,31 @@ export default function Header() {
                     </svg>
                     Artikel
                   </a>
+                  {isLoggedIn && (
+                    <>
+                      <a
+                        href="/dashboard"
+                        onClick={handleMobileLinkClick}
+                        className="flex items-center text-slate-700 text-sm font-medium transition-all duration-300 py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-slate-900 active:bg-slate-100 ml-2"
+                      >
+                        <svg className="w-3.5 h-3.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        Dashboard
+                      </a>
+                      <a
+                        href="/admin"
+                        onClick={handleMobileLinkClick}
+                        className="flex items-center text-slate-700 text-sm font-medium transition-all duration-300 py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-slate-900 active:bg-slate-100 ml-2"
+                      >
+                        <svg className="w-3.5 h-3.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        Admin Panel
+                      </a>
+                    </>
+                  )}
                   <a
                     href="/faq"
                     onClick={handleMobileLinkClick}
@@ -331,7 +314,7 @@ export default function Header() {
                 <div className="space-y-3">
                   <button
                     onClick={() => {
-                      setShowLoginModal(true);
+                      handleShowLogin();
                       handleMobileLinkClick();
                     }}
                     className="flex items-center text-slate-700 text-sm font-medium transition-all duration-300 py-3 px-4 rounded-lg hover:bg-slate-50 hover:text-slate-900 w-full text-left mx-2"
@@ -343,7 +326,7 @@ export default function Header() {
                   </button>
                   <button
                     onClick={() => {
-                      setShowRegisterModal(true);
+                      handleShowRegister();
                       handleMobileLinkClick();
                     }}
                     className="flex items-center justify-center bg-slate-900 text-white px-4 py-3 rounded-lg text-sm hover:bg-slate-800 transition-all duration-300 shadow-sm hover:shadow-md font-medium w-full mx-2"
@@ -360,147 +343,12 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Login Modal */}
-      {showLoginModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-md w-full p-6">
-            <h3 className="text-lg font-semibold mb-4">Masuk</h3>
-            <form onSubmit={handleLogin}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={loginData.email}
-                  onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400 transition-colors duration-300"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  value={loginData.password}
-                  onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400 transition-colors duration-300"
-                  required
-                />
-              </div>
-              <div className="flex space-x-3">
-                <button
-                  type="button"
-                  onClick={() => setShowLoginModal(false)}
-                  className="flex-1 px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
-                  disabled={loading}
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="flex-1 px-4 py-2 bg-slate-900 text-white rounded-md hover:bg-slate-800 disabled:opacity-50 transition-colors duration-300"
-                >
-                  {loading ? 'Masuk...' : 'Masuk'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Register Modal */}
-      {showRegisterModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-semibold mb-4">Registrasi</h3>
-            <form onSubmit={handleRegister}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nama Lengkap
-                </label>
-                <input
-                  type="text"
-                  value={registerData.nama}
-                  onChange={(e) => setRegisterData({ ...registerData, nama: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400 transition-colors duration-300"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={registerData.email}
-                  onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400 transition-colors duration-300"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  value={registerData.password}
-                  onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400 transition-colors duration-300"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Profesi
-                </label>
-                <select
-                  value={registerData.profesi}
-                  onChange={(e) => setRegisterData({ ...registerData, profesi: e.target.value as 'bidan' | 'perawat' })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400 transition-colors duration-300"
-                >
-                  <option value="bidan">Bidan</option>
-                  <option value="perawat">Perawat</option>
-                </select>
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Jenjang
-                </label>
-                <select
-                  value={registerData.jenjang}
-                  onChange={(e) => setRegisterData({ ...registerData, jenjang: e.target.value as 'D3' | 'D4-S1' })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400 transition-colors duration-300"
-                >
-                  <option value="D3">D3</option>
-                  <option value="D4-S1">D4-S1</option>
-                </select>
-              </div>
-              <div className="flex space-x-3">
-                <button
-                  type="button"
-                  onClick={() => setShowRegisterModal(false)}
-                  className="flex-1 px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
-                  disabled={loading}
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="flex-1 px-4 py-2 bg-slate-900 text-white rounded-md hover:bg-slate-800 disabled:opacity-50 transition-colors duration-300"
-                >
-                  {loading ? 'Mendaftar...' : 'Daftar'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        initialMode={authMode}
+      />
     </header>
   );
 }
