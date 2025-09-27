@@ -311,7 +311,6 @@ interface Artikel {
 ### Potential Improvements:
 1. **Dynamic Data**: Integrasi dengan CMS/API untuk konten dinamis
 2. **Advanced Search**: Full-text search dengan Algolia
-3. **User Authentication**: Login/register integration
 4. **E-commerce**: Shopping cart dan checkout
 5. **Analytics**: Google Analytics integration
 6. **PWA**: Progressive Web App features

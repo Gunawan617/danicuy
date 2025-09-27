@@ -1,8 +1,5 @@
 "use client"
 import { useState } from "react";
-import PurchaseCard from "./PurchaseCard";
-import PurchaseModal from "./PurchaseModal";
-import { useAuth } from "./AuthGuard";
 
 interface Paket {
   id: number;
@@ -77,10 +74,8 @@ const paketBimbel: Paket[] = [
 const filters = ["Semua Paket", "Bidan D3", "Bidan D4-S1", "Perawat D3", "Perawat D4-S1"];
 
 export default function BimbelPageContent() {
-  const { isLoggedIn } = useAuth();
+
   const [activeFilter, setActiveFilter] = useState("Semua Paket");
-  const [selectedPaket, setSelectedPaket] = useState<Paket | null>(null);
-  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
 
   const getFilterKey = (filter: string) => {
     switch (filter) {
@@ -107,12 +102,7 @@ export default function BimbelPageContent() {
   });
 
   const handlePurchaseClick = (paket: Paket) => {
-    setSelectedPaket(paket);
-    setShowPurchaseModal(true);
-  };
-
-  const handlePurchaseSuccess = () => {
-    alert('Pembelian berhasil diproses!');
+    alert('Redirect to purchase page for ' + paket.nama);
   };
 
   return (
@@ -231,27 +221,12 @@ export default function BimbelPageContent() {
                 {/* CTA Button */}
                 <button
                   onClick={() => handlePurchaseClick(paket)}
-                  className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 ${
-                    isLoggedIn
-                      ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
-                      : 'bg-gray-400 text-gray-700 cursor-not-allowed'
-                  }`}
-                  disabled={!isLoggedIn}
+                  className='w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
                 >
-                  {isLoggedIn ? (
-                    <div className="flex items-center justify-center space-x-2">
-                      <span>📚 Daftar Bimbel</span>
-                    </div>
-                  ) : (
-                    'Login untuk Membeli'
-                  )}
+                  <div className="flex items-center justify-center space-x-2">
+                    <span>📚 Daftar Bimbel</span>
+                  </div>
                 </button>
-
-                {!isLoggedIn && (
-                  <p className="text-xs text-gray-500 text-center mt-2">
-                    Anda perlu login untuk membeli paket ini
-                  </p>
-                )}
               </div>
             </div>
           ))}
@@ -269,14 +244,6 @@ export default function BimbelPageContent() {
           </div>
         )}
       </div>
-
-      {/* Purchase Modal */}
-      <PurchaseModal
-        paket={selectedPaket}
-        isOpen={showPurchaseModal}
-        onClose={() => setShowPurchaseModal(false)}
-        onSuccess={handlePurchaseSuccess}
-      />
     </section>
   );
 }

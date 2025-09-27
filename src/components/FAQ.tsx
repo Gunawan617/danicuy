@@ -48,11 +48,6 @@ const faqs = [
     answer: "Tentu! Setiap paket CBT dilengkapi dengan fitur review pembahasan lengkap untuk setiap soal. Anda dapat melihat penjelasan detail, referensi, dan tips menjawab untuk meningkatkan pemahaman."
   },
   {
-    id: 10,
-    question: "Bagaimana jika saya lupa password?",
-    answer: "Klik link 'Lupa Password' di halaman login, masukkan email Anda, dan kami akan mengirimkan link reset password. Pastikan email yang Anda gunakan aktif dan dapat diakses."
-  },
-  {
     id: 11,
     question: "Apakah data pribadi saya aman?",
     answer: "Keamanan data adalah prioritas utama kami. Semua data dienkripsi dengan standar keamanan tinggi, server menggunakan SSL certificate, dan kami tidak pernah membagikan data pribadi Anda kepada pihak ketiga tanpa izin."

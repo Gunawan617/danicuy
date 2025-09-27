@@ -69,7 +69,7 @@ export default function CBTInterface() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            user_id: 1, // This should come from authentication
+            user_id: 1,
             paket_id: 1, // This should come from selected package
             soal_ids: soalIds
           })
