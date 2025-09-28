@@ -1,3 +1,4 @@
+console.log('Loaded app.js from', __dirname);
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -14,8 +15,16 @@ const faqRoutes = require('./routes/faqs');
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// CORS configuration
+const corsOptions = {
+  origin: 'http://localhost:3000', // Update if your frontend runs elsewhere
+  credentials: true,
+};
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
@@ -24,13 +33,11 @@ mongoose.connect(process.env.MONGODB_URI, {
   console.error('MongoDB connection error:', err);
 });
 
-app.use(cors());
-app.use(bodyParser.json());
-
 // Serve static files from uploads directory
 app.use('/uploads', express.static('uploads'));
 
-app.use('/api', authRoutes);
+app.use('/api/auth', authRoutes);
+console.log('Auth routes registered');
 app.use('/api/banners', bannersRoutes);
 app.use('/api/tryout', tryoutRoutes);
 app.use('/api/bimbel', bimbelRoutes);

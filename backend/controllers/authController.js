@@ -26,7 +26,17 @@ exports.register = async (req, res) => {
         await user.save();
 
         const token = jwt.sign({ id: user.id, role: user.role }, SECRET, { expiresIn: '2h' });
-        res.status(201).json({ token });
+        res.status(201).json({ 
+            token,
+            user: {
+                id: user.id,
+                nama: user.nama,
+                email: user.email,
+                role: user.role,
+                profesi: user.profesi,
+                jenjang: user.jenjang
+            }
+        });
 
     } catch (error) {
         console.error(error.message);
@@ -49,7 +59,17 @@ exports.login = async (req, res) => {
         }
 
         const token = jwt.sign({ id: user.id, role: user.role }, SECRET, { expiresIn: '2h' });
-        res.json({ token });
+        res.json({ 
+            token,
+            user: {
+                id: user.id,
+                nama: user.nama,
+                email: user.email,
+                role: user.role,
+                profesi: user.profesi,
+                jenjang: user.jenjang
+            }
+        });
 
     } catch (error) {
         console.error(error.message);

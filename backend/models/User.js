@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
   },
   jenjang: {
     type: String,
-    enum: ['D3', 'D4-S1', 'N/A'],
+    enum: ['D3', 'D4-S1', 'N/A', 'admin'],
   },
   role: {
     type: String,
