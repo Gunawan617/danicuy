@@ -1,17 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const bimbelController = require('../controllers/bimbelController');
-const authMiddleware = require('../middleware/auth');
-const packageUpload = require('../middleware/packageUpload');
+const {
+    upload,
+    getAllPackages,
+    getPackageById,
+    createPackage,
+    updatePackage,
+    deletePackage
+} = require('../controllers/bimbelController');
+const { authMiddleware, adminMiddleware } = require('../middleware/auth');
 
 // Public routes
-router.get('/packages', bimbelController.getAllPackages);
-router.get('/packages/:id', bimbelController.getPackageById);
+router.get('/', getAllPackages);
+router.get('/:id', getPackageById);
 
-// Protected routes (require authentication)
-router.use(authMiddleware);
-router.post('/packages', packageUpload.single('gambar'), bimbelController.createPackage);
-router.put('/packages/:id', packageUpload.single('gambar'), bimbelController.updatePackage);
-router.delete('/packages/:id', bimbelController.deletePackage);
+// Protected routes (admin only)
+router.post('/', authMiddleware, adminMiddleware, upload.single('gambar'), createPackage);
+router.put('/:id', authMiddleware, adminMiddleware, upload.single('gambar'), updatePackage);
+router.delete('/:id', authMiddleware, adminMiddleware, deletePackage);
 
 module.exports = router;

@@ -1,16 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const articleController = require('../controllers/articleController');
-const authMiddleware = require('../middleware/auth');
+const {
+    upload,
+    getAllArticles,
+    getArticleById,
+    createArticle,
+    updateArticle,
+    deleteArticle
+} = require('../controllers/articleController');
+const { authMiddleware, adminMiddleware } = require('../middleware/auth');
 
 // Public routes
-router.get('/', articleController.getAllArticles);
-router.get('/:id', articleController.getArticleById);
+router.get('/', getAllArticles);
+router.get('/:id', getArticleById);
 
-// Protected routes (require authentication)
-router.use(authMiddleware);
-router.post('/', articleController.createArticle);
-router.put('/:id', articleController.updateArticle);
-router.delete('/:id', articleController.deleteArticle);
+// Protected routes (admin only)
+router.post('/', authMiddleware, adminMiddleware, upload.single('gambar'), createArticle);
+router.put('/:id', authMiddleware, adminMiddleware, upload.single('gambar'), updateArticle);
+router.delete('/:id', authMiddleware, adminMiddleware, deleteArticle);
 
 module.exports = router;

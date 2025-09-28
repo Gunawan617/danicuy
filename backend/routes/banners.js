@@ -1,17 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const bannerController = require('../controllers/bannerController');
-const upload = require('../middleware/upload');
-const authMiddleware = require('../middleware/auth');
+const {
+    upload,
+    createBanner,
+    getAllBanners,
+    getBannerById,
+    updateBanner,
+    deleteBanner
+} = require('../controllers/bannerController');
+const { authMiddleware, adminMiddleware } = require('../middleware/auth');
 
 // Public routes
-router.get('/', bannerController.getAllBanners);
-router.get('/:id', bannerController.getBannerById);
+router.get('/', getAllBanners);
+router.get('/:id', getBannerById);
 
-// Protected routes (require authentication)
-router.use(authMiddleware);
-router.post('/', upload.single('image'), bannerController.createBanner);
-router.put('/:id', upload.single('image'), bannerController.updateBanner);
-router.delete('/:id', bannerController.deleteBanner);
+// Protected routes (admin only)
+router.post('/', authMiddleware, adminMiddleware, upload.single('image'), createBanner);
+router.put('/:id', authMiddleware, adminMiddleware, upload.single('image'), updateBanner);
+router.delete('/:id', authMiddleware, adminMiddleware, deleteBanner);
 
 module.exports = router;

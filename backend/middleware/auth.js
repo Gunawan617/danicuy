@@ -1,13 +1,25 @@
 const jwt = require('jsonwebtoken');
-const { SECRET } = require('../controllers/authController');
+const { SECRET } = require('../config/jwt');
 
-module.exports = function (req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (!token) return res.status(401).json({ message: 'No token provided.' });
-  jwt.verify(token, SECRET, (err, user) => {
-    if (err) return res.status(401).json({ message: 'Invalid token.' });
-    req.user = user;
-    next();
-  });
+exports.authMiddleware = (req, res, next) => {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    if (!token) {
+        return res.status(401).json({ message: 'No token, authorization denied' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, SECRET);
+        req.user = decoded;
+        next();
+    } catch (e) {
+        res.status(401).json({ message: 'Token is not valid' });
+    }
+};
+
+exports.adminMiddleware = (req, res, next) => {
+    if (req.user && req.user.role === 'admin') {
+        next();
+    } else {
+        res.status(403).json({ message: 'Access denied. Admin role required.' });
+    }
 };

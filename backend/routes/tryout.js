@@ -1,17 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const tryoutController = require('../controllers/tryoutController');
-const authMiddleware = require('../middleware/auth');
-const packageUpload = require('../middleware/packageUpload');
+const {
+    upload,
+    getAllPackages,
+    getPackageById,
+    createPackage,
+    updatePackage,
+    deletePackage
+} = require('../controllers/tryoutController');
+const { authMiddleware, adminMiddleware } = require('../middleware/auth');
 
 // Public routes
-router.get('/packages', tryoutController.getAllPackages);
-router.get('/packages/:id', tryoutController.getPackageById);
+router.get('/', getAllPackages);
+router.get('/:id', getPackageById);
 
-// Protected routes (require authentication)
-router.use(authMiddleware);
-router.post('/packages', packageUpload.single('gambar'), tryoutController.createPackage);
-router.put('/packages/:id', packageUpload.single('gambar'), tryoutController.updatePackage);
-router.delete('/packages/:id', tryoutController.deletePackage);
+// Protected routes (admin only)
+router.post('/', authMiddleware, adminMiddleware, upload.single('gambar'), createPackage);
+router.put('/:id', authMiddleware, adminMiddleware, upload.single('gambar'), updatePackage);
+router.delete('/:id', authMiddleware, adminMiddleware, deletePackage);
 
 module.exports = router;

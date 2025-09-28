@@ -1,16 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const faqController = require('../controllers/faqController');
-const authMiddleware = require('../middleware/auth');
+const {
+    getAllFaqs,
+    getFaqById,
+    createFaq,
+    updateFaq,
+    deleteFaq
+} = require('../controllers/faqController');
+const { authMiddleware, adminMiddleware } = require('../middleware/auth');
 
 // Public routes
-router.get('/', faqController.getAllFaqs);
-router.get('/:id', faqController.getFaqById);
+router.get('/', getAllFaqs);
+router.get('/:id', getFaqById);
 
-// Protected routes (require authentication)
-router.use(authMiddleware);
-router.post('/', faqController.createFaq);
-router.put('/:id', faqController.updateFaq);
-router.delete('/:id', faqController.deleteFaq);
+// Protected routes (admin only)
+router.post('/', authMiddleware, adminMiddleware, createFaq);
+router.put('/:id', authMiddleware, adminMiddleware, updateFaq);
+router.delete('/:id', authMiddleware, adminMiddleware, deleteFaq);
 
 module.exports = router;
